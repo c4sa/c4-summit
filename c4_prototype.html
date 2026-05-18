@@ -1,0 +1,1873 @@
+<!-- C4 CodeLabs — Interactive Prototype (Light theme · v2) -->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    /* Light, refined palette */
+    --c4-bg: #f6f3ee;         /* warm cream page bg */
+    --c4-bg-2: #ffffff;        /* card surface */
+    --c4-surface: #ffffff;
+    --c4-surface-2: #fbf8f3;   /* subtle alt surface */
+    --c4-line: rgba(20, 16, 10, 0.10);
+    --c4-line-2: rgba(20, 16, 10, 0.18);
+    --c4-text: #1a1714;
+    --c4-text-2: #5a544c;
+    --c4-text-3: #8a847c;
+    --c4-red: #8B1A1F;
+    --c4-red-2: #a8232a;
+    --c4-red-soft: #f7e9ea;
+    --c4-red-glow: rgba(139, 26, 31, 0.20);
+    --c4-success: #2f7a55;
+    --c4-success-soft: #e5f1eb;
+    --c4-warn: #b07a2a;
+    --c4-warn-soft: #f6ecd9;
+    --c4-info: #3a6ba0;
+    --c4-info-soft: #e6eef7;
+    --display: 'Fraunces', serif;
+    --sans: 'Geist', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body, .c4-root {
+    font-family: var(--sans);
+    color: var(--c4-text);
+    background:
+      radial-gradient(ellipse 70% 50% at 90% -10%, rgba(139, 26, 31, 0.08), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 0% 110%, rgba(139, 26, 31, 0.05), transparent 60%),
+      var(--c4-bg);
+    min-height: 100vh;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .c4-root { padding: 24px; }
+
+  /* ============ HEADER ============ */
+  .c4-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px;
+    background: #ffffff;
+    border: 1px solid var(--c4-line);
+    border-radius: 16px;
+    margin-bottom: 22px;
+    box-shadow: 0 2px 8px rgba(20, 16, 10, 0.03);
+  }
+  .c4-logo {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .c4-logo-img {
+    width: 64px; height: 48px;
+    background: #1a1714;
+    border-radius: 9px;
+    padding: 6px;
+    display: grid; place-items: center;
+  }
+  .c4-logo-img img { width: 100%; height: 100%; object-fit: contain; }
+  .c4-logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+  .c4-logo-text .title { font-family: var(--display); font-weight: 600; font-size: 18px; letter-spacing: -0.01em; color: var(--c4-text); }
+  .c4-logo-text .sub   { font-size: 11px; color: var(--c4-text-3); letter-spacing: 0.18em; text-transform: uppercase; margin-top: 4px; }
+
+  .c4-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px;
+    background: var(--c4-red-soft);
+    border: 1px solid rgba(139, 26, 31, 0.25);
+    color: var(--c4-red);
+    border-radius: 999px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .c4-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c4-red-2); box-shadow: 0 0 8px var(--c4-red-2); animation: pulse 1.8s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  /* ============ TABS ============ */
+  .c4-tabs {
+    display: flex; gap: 6px; padding: 6px;
+    background: #ffffff;
+    border: 1px solid var(--c4-line);
+    border-radius: 14px;
+    margin-bottom: 22px;
+    overflow-x: auto;
+    box-shadow: 0 2px 8px rgba(20, 16, 10, 0.03);
+  }
+  .c4-tab {
+    flex: 1; min-width: 180px;
+    padding: 13px 18px;
+    background: transparent;
+    border: none;
+    color: var(--c4-text-2);
+    font-family: var(--sans);
+    font-size: 13px; font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 9px;
+    transition: all 0.25s ease;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    white-space: nowrap;
+  }
+  .c4-tab:hover { color: var(--c4-text); background: var(--c4-surface-2); }
+  .c4-tab.active {
+    background: linear-gradient(180deg, var(--c4-red), #6c1418);
+    color: #fff;
+    box-shadow: 0 8px 20px -8px var(--c4-red-glow);
+  }
+  .c4-tab .num { font-family: var(--mono); font-size: 11px; opacity: 0.75; }
+
+  /* ============ SCENE LAYOUT ============ */
+  .c4-scene { display: none; animation: fadeUp 0.4s ease both; }
+  .c4-scene.active { display: block; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .c4-stage {
+    background: #ffffff;
+    border: 1px solid var(--c4-line);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 12px 32px -16px rgba(20, 16, 10, 0.12);
+  }
+  .c4-stage-head {
+    padding: 18px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--c4-line);
+    background: var(--c4-surface-2);
+  }
+  .c4-stage-head .label {
+    font-size: 11px; letter-spacing: 0.2em; color: var(--c4-text-3); text-transform: uppercase;
+  }
+  .c4-stage-head .stepname {
+    font-family: var(--display); font-size: 18px; font-weight: 500; letter-spacing: -0.01em;
+    color: var(--c4-text);
+    margin-top: 4px;
+  }
+
+  /* Stepper inside stage */
+  .c4-stepper {
+    display: flex; gap: 6px; padding: 14px 20px;
+    border-bottom: 1px solid var(--c4-line);
+    overflow-x: auto;
+    background: #ffffff;
+  }
+  .c4-step {
+    flex: 1; min-width: 130px;
+    padding: 10px 14px;
+    background: var(--c4-surface-2);
+    border: 1px solid var(--c4-line);
+    color: var(--c4-text-2);
+    font-size: 12px; font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 10px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-family: var(--sans);
+  }
+  .c4-step:hover { border-color: var(--c4-line-2); color: var(--c4-text); }
+  .c4-step.done { color: var(--c4-text); border-color: rgba(47, 122, 85, 0.30); background: var(--c4-success-soft); }
+  .c4-step.done .step-num { background: var(--c4-success); color: #fff; border-color: var(--c4-success); }
+  .c4-step.active {
+    border-color: var(--c4-red-2);
+    background: var(--c4-red-soft);
+    color: var(--c4-red);
+  }
+  .c4-step.active .step-num { background: var(--c4-red); color: #fff; border-color: var(--c4-red); }
+  .c4-step .step-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 1px solid var(--c4-line-2);
+    display: grid; place-items: center;
+    font-family: var(--mono); font-size: 11px;
+    flex-shrink: 0;
+    background: #fff;
+  }
+
+  /* Stage body */
+  .c4-stage-body { padding: 28px; min-height: 520px; background: var(--c4-surface-2); }
+
+  /* ============ COMMON UI ============ */
+  .c4-card {
+    background: #ffffff;
+    border: 1px solid var(--c4-line);
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 1px 3px rgba(20, 16, 10, 0.04);
+  }
+  .c4-card-title {
+    font-family: var(--display);
+    font-size: 16px; font-weight: 500;
+    color: var(--c4-text);
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+  .c4-card-sub {
+    font-size: 12.5px; color: var(--c4-text-3); letter-spacing: 0.02em;
+    margin-bottom: 18px;
+  }
+
+  .c4-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .c4-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .c4-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  @media (max-width: 880px) {
+    .c4-grid-2, .c4-grid-3, .c4-grid-4 { grid-template-columns: 1fr; }
+  }
+
+  .c4-field { margin-bottom: 14px; }
+  .c4-field label {
+    display: block; font-size: 11px; letter-spacing: 0.12em; color: var(--c4-text-3);
+    text-transform: uppercase; margin-bottom: 6px; font-weight: 500;
+  }
+  .c4-input, .c4-textarea, .c4-select {
+    width: 100%;
+    padding: 11px 13px;
+    background: #fff;
+    border: 1px solid var(--c4-line-2);
+    color: var(--c4-text);
+    font-family: var(--sans);
+    font-size: 13px;
+    border-radius: 9px;
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+  }
+  .c4-input:focus, .c4-textarea:focus, .c4-select:focus {
+    border-color: var(--c4-red-2);
+    box-shadow: 0 0 0 3px rgba(139, 26, 31, 0.08);
+  }
+  .c4-textarea { resize: vertical; min-height: 90px; }
+  .c4-input.readonly { background: var(--c4-red-soft); border-color: rgba(139, 26, 31, 0.20); color: var(--c4-text); }
+  .c4-input.readonly + .lock-hint { font-size: 10px; color: var(--c4-red-2); margin-top: 4px; letter-spacing: 0.08em; font-weight: 500; }
+
+  .c4-btn {
+    padding: 11px 18px;
+    background: linear-gradient(180deg, var(--c4-red), #6c1418);
+    color: #fff;
+    border: 1px solid var(--c4-red-2);
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 6px 16px -8px var(--c4-red-glow);
+  }
+  .c4-btn:hover { transform: translateY(-1px); box-shadow: 0 12px 24px -10px var(--c4-red-glow); }
+  .c4-btn:active { transform: translateY(0); }
+  .c4-btn.ghost {
+    background: #fff;
+    color: var(--c4-text);
+    border-color: var(--c4-line-2);
+    box-shadow: none;
+  }
+  .c4-btn.ghost:hover { background: var(--c4-surface-2); }
+  .c4-btn.danger-outline {
+    background: #fff;
+    color: var(--c4-red);
+    border-color: rgba(139, 26, 31, 0.35);
+    box-shadow: none;
+  }
+  .c4-btn.danger-outline:hover { background: var(--c4-red-soft); }
+  .c4-btn.success {
+    background: linear-gradient(180deg, var(--c4-success), #1f5a3e);
+    border-color: var(--c4-success);
+    box-shadow: 0 6px 16px -8px rgba(47, 122, 85, 0.4);
+  }
+
+  /* ============ EMAIL PREVIEW (light mail client look) ============ */
+  .c4-email-window {
+    background: #ffffff;
+    color: #1a1714;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px -20px rgba(20, 16, 10, 0.20);
+    font-family: var(--sans);
+    border: 1px solid var(--c4-line);
+  }
+  .c4-email-toolbar {
+    background: #f0ebe2;
+    padding: 10px 14px;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid #d8d2c4;
+  }
+  .c4-email-toolbar .traffic { display: flex; gap: 6px; }
+  .c4-email-toolbar .traffic span { width: 11px; height: 11px; border-radius: 50%; }
+  .c4-email-toolbar .traffic span:nth-child(1) { background: #e06c54; }
+  .c4-email-toolbar .traffic span:nth-child(2) { background: #e0a94a; }
+  .c4-email-toolbar .traffic span:nth-child(3) { background: #74a85a; }
+  .c4-email-toolbar .url { flex: 1; text-align: center; font-size: 11px; color: #6a6258; font-family: var(--mono); }
+
+  .c4-email-meta {
+    padding: 14px 22px;
+    background: #faf6ef;
+    border-bottom: 1px solid #ebe5d8;
+    font-size: 12px;
+    color: #5a544c;
+  }
+  .c4-email-meta .from-line { margin-bottom: 3px; }
+  .c4-email-meta .from-line b { color: var(--c4-text); }
+  .c4-email-meta .subj { font-family: var(--display); font-size: 14px; color: var(--c4-text); font-weight: 600; margin-top: 6px; }
+
+  .c4-email-body {
+    padding: 36px 32px;
+    background: #ffffff;
+  }
+  .c4-email-hero {
+    background: linear-gradient(135deg, #1a1714 0%, #2c1416 100%);
+    color: #fff;
+    padding: 36px 28px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .c4-email-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 80% 20%, rgba(139, 26, 31, 0.4), transparent 60%);
+  }
+  .c4-email-hero > * { position: relative; }
+  .c4-email-hero .event-label {
+    font-size: 10px; letter-spacing: 0.32em; color: #d49a9d; text-transform: uppercase; margin-bottom: 12px;
+  }
+  .c4-email-hero h1 {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+    color: #fff;
+  }
+  .c4-email-hero .when {
+    font-size: 12px; color: #d8d0c5;
+    display: flex; gap: 18px; justify-content: center;
+    font-family: var(--mono);
+    flex-wrap: wrap;
+  }
+  .c4-email-greeting {
+    font-family: var(--display); font-size: 18px; color: var(--c4-text); margin-bottom: 12px; font-weight: 500;
+  }
+  .c4-email-body p {
+    color: #3a342e; font-size: 13.5px; line-height: 1.7; margin-bottom: 14px;
+  }
+  .c4-email-cta {
+    display: inline-block;
+    padding: 13px 26px;
+    background: var(--c4-red);
+    color: #fff !important;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    margin-top: 8px;
+    cursor: pointer;
+    border: none;
+    font-family: var(--sans);
+  }
+  .c4-email-cta:hover { background: #6c1418; }
+  .c4-email-footer-mini {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid #ece6d8;
+    font-size: 11px;
+    color: #8a847c;
+    text-align: center;
+  }
+
+  /* ============ LANDING PAGE (light, premium) ============ */
+  .c4-landing {
+    background:
+      radial-gradient(circle at 50% 0%, rgba(139, 26, 31, 0.10), transparent 60%),
+      linear-gradient(180deg, #ffffff 0%, var(--c4-surface-2) 100%);
+    border-radius: 14px;
+    padding: 50px 36px;
+    border: 1px solid var(--c4-line);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0 8px 24px -12px rgba(20, 16, 10, 0.10);
+  }
+  .c4-landing .badge {
+    display: inline-block;
+    padding: 5px 12px;
+    background: var(--c4-red-soft);
+    color: var(--c4-red);
+    border: 1px solid rgba(139, 26, 31, 0.25);
+    border-radius: 999px;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    font-weight: 500;
+  }
+  .c4-landing h2 {
+    font-family: var(--display);
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.1;
+    color: var(--c4-text);
+  }
+  .c4-landing .hi {
+    color: var(--c4-text-2);
+    font-size: 14px;
+    margin-bottom: 30px;
+  }
+  .c4-landing .hi b { color: var(--c4-text); font-weight: 500; }
+  .c4-landing .choice-row {
+    display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+    margin-top: 30px;
+  }
+  .c4-landing .choice-btn {
+    min-width: 200px;
+    padding: 16px 22px;
+    border-radius: 10px;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    font-family: var(--sans);
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  .c4-landing .choice-confirm {
+    background: linear-gradient(180deg, var(--c4-red), #6c1418);
+    color: #fff;
+    border: 1px solid var(--c4-red-2);
+    box-shadow: 0 10px 24px -10px var(--c4-red-glow);
+  }
+  .c4-landing .choice-confirm:hover { transform: translateY(-2px); box-shadow: 0 14px 28px -10px var(--c4-red-glow); }
+  .c4-landing .choice-decline {
+    background: #ffffff;
+    color: var(--c4-text);
+    border: 1px solid var(--c4-line-2);
+  }
+  .c4-landing .choice-decline:hover { background: var(--c4-surface-2); border-color: var(--c4-text-3); }
+
+  .c4-landing .event-meta {
+    display: flex; gap: 28px; justify-content: center;
+    margin-top: 30px; padding-top: 24px;
+    border-top: 1px solid var(--c4-line);
+    font-size: 11px; color: var(--c4-text-3);
+    font-family: var(--mono);
+    flex-wrap: wrap;
+  }
+  .c4-landing .event-meta b { color: var(--c4-text-2); font-weight: 600; }
+
+  /* ============ DASHBOARD METRICS ============ */
+  .c4-metric {
+    background: #ffffff;
+    border: 1px solid var(--c4-line);
+    border-radius: 12px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(20, 16, 10, 0.04);
+  }
+  .c4-metric::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%;
+    background: var(--c4-red);
+  }
+  .c4-metric .label {
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--c4-text-3);
+    margin-bottom: 8px; font-weight: 500;
+  }
+  .c4-metric .value {
+    font-family: var(--display); font-size: 30px; font-weight: 500; color: var(--c4-text);
+    letter-spacing: -0.02em; line-height: 1;
+  }
+  .c4-metric .delta {
+    margin-top: 8px;
+    font-size: 11px;
+    display: flex; align-items: center; gap: 6px;
+    color: var(--c4-text-3);
+  }
+  .c4-metric .delta .up { color: var(--c4-success); font-weight: 500; }
+  .c4-metric .pct {
+    margin-top: 12px;
+    height: 4px;
+    background: var(--c4-surface-2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .c4-metric .pct .fill {
+    height: 100%; background: var(--c4-red);
+    animation: grow 1.2s ease-out;
+  }
+  @keyframes grow { from { width: 0; } }
+
+  /* Funnel viz */
+  .c4-funnel {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .c4-funnel-bar {
+    display: grid;
+    grid-template-columns: 130px 1fr 80px;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid var(--c4-line);
+  }
+  .c4-funnel-bar .name { font-size: 12px; color: var(--c4-text-2); letter-spacing: 0.04em; font-weight: 500; }
+  .c4-funnel-bar .track {
+    height: 10px; background: var(--c4-surface-2); border-radius: 5px; overflow: hidden;
+  }
+  .c4-funnel-bar .track .fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--c4-red), var(--c4-red-2));
+    border-radius: 5px;
+    animation: grow 1.4s ease-out;
+  }
+  .c4-funnel-bar .count {
+    font-family: var(--mono); font-size: 13px; text-align: right; color: var(--c4-text); font-weight: 500;
+  }
+  .c4-funnel-bar .count .small { font-size: 10px; color: var(--c4-text-3); display: block; font-weight: 400; }
+
+  /* Recipient table */
+  .c4-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 12.5px;
+  }
+  .c4-table th {
+    text-align: left; padding: 12px 14px;
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--c4-text-3);
+    font-weight: 500;
+    border-bottom: 1px solid var(--c4-line);
+    background: var(--c4-surface-2);
+  }
+  .c4-table td {
+    padding: 13px 14px;
+    border-bottom: 1px solid var(--c4-line);
+    color: var(--c4-text-2);
+  }
+  .c4-table tr:last-child td { border-bottom: none; }
+  .c4-table tr:hover td { background: var(--c4-surface-2); }
+  .c4-table .name-cell { color: var(--c4-text); font-weight: 500; }
+  .c4-status {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .c4-status .dot { width: 5px; height: 5px; border-radius: 50%; }
+  .c4-status.confirmed { background: var(--c4-success-soft); color: var(--c4-success); }
+  .c4-status.confirmed .dot { background: var(--c4-success); }
+  .c4-status.opened { background: var(--c4-warn-soft); color: var(--c4-warn); }
+  .c4-status.opened .dot { background: var(--c4-warn); }
+  .c4-status.clicked { background: var(--c4-info-soft); color: var(--c4-info); }
+  .c4-status.clicked .dot { background: var(--c4-info); }
+  .c4-status.declined { background: var(--c4-red-soft); color: var(--c4-red); }
+  .c4-status.declined .dot { background: var(--c4-red); }
+  .c4-status.pending { background: var(--c4-surface-2); color: var(--c4-text-3); border: 1px solid var(--c4-line); }
+  .c4-status.pending .dot { background: var(--c4-text-3); }
+  .c4-status.replied { background: var(--c4-success-soft); color: var(--c4-success); }
+  .c4-status.replied .dot { background: var(--c4-success); }
+  .c4-status.open-q { background: var(--c4-warn-soft); color: var(--c4-warn); }
+  .c4-status.open-q .dot { background: var(--c4-warn); }
+
+  /* ============ THANK YOU PAGES ============ */
+  .c4-thanks {
+    text-align: center;
+    padding: 60px 32px;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(139, 26, 31, 0.08), transparent 60%),
+      linear-gradient(180deg, #ffffff 0%, var(--c4-surface-2) 100%);
+    border-radius: 14px;
+    border: 1px solid var(--c4-line);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 24px -12px rgba(20, 16, 10, 0.10);
+  }
+  .c4-thanks > * { position: relative; }
+  .c4-thanks .icon {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    display: inline-grid; place-items: center;
+    background: var(--c4-success-soft);
+    border: 1px solid rgba(47, 122, 85, 0.30);
+    color: var(--c4-success);
+    margin-bottom: 22px;
+    animation: pop 0.5s ease-out;
+  }
+  .c4-thanks .icon.muted {
+    background: var(--c4-surface-2);
+    border-color: var(--c4-line-2);
+    color: var(--c4-text-2);
+  }
+  @keyframes pop { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .c4-thanks h2 {
+    font-family: var(--display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; margin-bottom: 12px;
+    color: var(--c4-text);
+  }
+  .c4-thanks p { color: var(--c4-text-2); font-size: 14px; max-width: 460px; margin: 0 auto 8px; }
+  .c4-thanks .reference {
+    margin-top: 20px;
+    display: inline-flex; gap: 10px; padding: 8px 16px;
+    background: #ffffff;
+    border: 1px solid var(--c4-line);
+    border-radius: 999px;
+    font-family: var(--mono); font-size: 11px; color: var(--c4-text-3);
+  }
+  .c4-thanks .reference b { color: var(--c4-text); font-weight: 500; }
+
+  /* ============ SPEAKER PORTAL ============ */
+  .c4-portal-shell {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid var(--c4-line);
+    overflow: hidden;
+    min-height: 560px;
+    box-shadow: 0 8px 24px -12px rgba(20, 16, 10, 0.10);
+  }
+  @media (max-width: 880px) { .c4-portal-shell { grid-template-columns: 1fr; } }
+
+  .c4-portal-side {
+    background: linear-gradient(180deg, #1a1714 0%, #2a2420 100%);
+    padding: 22px 14px;
+    display: flex; flex-direction: column;
+    color: #d8d0c5;
+  }
+  .c4-portal-side .logo-mini {
+    font-family: var(--display); font-weight: 600; font-size: 14px;
+    color: #ffffff;
+    padding: 0 8px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .c4-portal-side .logo-mini .mark {
+    width: 32px; height: 24px;
+    background: #1a1714;
+    border-radius: 5px;
+    padding: 3px;
+    display: grid; place-items: center;
+  }
+  .c4-portal-side .logo-mini .mark img { width: 100%; height: 100%; object-fit: contain; }
+  .c4-nav-item {
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: #b5ada1;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 4px;
+    transition: all 0.15s ease;
+  }
+  .c4-nav-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
+  .c4-nav-item.active { background: rgba(139, 26, 31, 0.25); color: #fff; border-left: 2px solid var(--c4-red-2); padding-left: 10px; }
+  .c4-nav-item .ico { width: 16px; opacity: 0.85; }
+
+  .c4-portal-side .me {
+    margin-top: auto; padding: 12px;
+    background: rgba(255,255,255,0.04); border-radius: 10px;
+    display: flex; align-items: center; gap: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .c4-portal-side .me .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--c4-red), #4d0e10);
+    display: grid; place-items: center;
+    font-family: var(--display); font-weight: 600; font-size: 13px;
+    color: #fff;
+  }
+  .c4-portal-side .me .who { font-size: 12px; line-height: 1.3; }
+  .c4-portal-side .me .who b { display: block; color: #ffffff; font-weight: 500; }
+  .c4-portal-side .me .who span { color: #8a8276; font-size: 10.5px; }
+
+  .c4-portal-main {
+    padding: 28px;
+    overflow-y: auto;
+    background: #ffffff;
+  }
+  .c4-portal-main .greeting {
+    font-family: var(--display);
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+    color: var(--c4-text);
+  }
+  .c4-portal-main .greeting .accent { color: var(--c4-red-2); }
+  .c4-portal-main .sub-greet { color: var(--c4-text-3); font-size: 13px; margin-bottom: 24px; }
+
+  /* SLA highlight banner */
+  .c4-sla-banner {
+    margin: 18px 0 22px;
+    padding: 14px 18px;
+    background: linear-gradient(90deg, var(--c4-red-soft) 0%, #fdf6f7 100%);
+    border: 1px solid rgba(139, 26, 31, 0.20);
+    border-left: 3px solid var(--c4-red);
+    border-radius: 10px;
+    display: flex; align-items: center; gap: 14px;
+    font-size: 13px;
+  }
+  .c4-sla-banner .sla-icon {
+    width: 36px; height: 36px;
+    background: #fff;
+    border: 1px solid rgba(139, 26, 31, 0.25);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    color: var(--c4-red);
+    flex-shrink: 0;
+  }
+  .c4-sla-banner .sla-text b {
+    font-family: var(--display); font-size: 16px; font-weight: 600; color: var(--c4-red); display: block; margin-bottom: 2px;
+  }
+  .c4-sla-banner .sla-text span { color: var(--c4-text-2); font-size: 12.5px; }
+
+  /* FAQ */
+  .c4-faq-item {
+    background: #ffffff;
+    border: 1px solid var(--c4-line);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .c4-faq-q {
+    padding: 14px 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 13px; font-weight: 500;
+    color: var(--c4-text);
+    user-select: none;
+  }
+  .c4-faq-q .arrow {
+    transition: transform 0.25s ease;
+    color: var(--c4-text-3);
+  }
+  .c4-faq-item.open .c4-faq-q .arrow { transform: rotate(180deg); color: var(--c4-red-2); }
+  .c4-faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    color: var(--c4-text-2);
+    font-size: 12.5px;
+    line-height: 1.65;
+  }
+  .c4-faq-item.open .c4-faq-a { max-height: 220px; }
+  .c4-faq-a > div { padding: 0 18px 16px; border-top: 1px solid var(--c4-line); padding-top: 14px; }
+
+  /* Resources tile grid */
+  .c4-tile {
+    background: #ffffff;
+    border: 1px solid var(--c4-line);
+    border-radius: 12px;
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(20, 16, 10, 0.04);
+  }
+  .c4-tile:hover { transform: translateY(-2px); border-color: rgba(139, 26, 31, 0.40); box-shadow: 0 10px 24px -12px rgba(20, 16, 10, 0.12); }
+  .c4-tile .tile-icon {
+    width: 36px; height: 36px;
+    background: var(--c4-red-soft);
+    color: var(--c4-red);
+    border-radius: 9px;
+    display: grid; place-items: center;
+    margin-bottom: 14px;
+  }
+  .c4-tile h4 { font-family: var(--display); font-size: 15px; font-weight: 500; margin-bottom: 4px; color: var(--c4-text); }
+  .c4-tile p { font-size: 11.5px; color: var(--c4-text-3); }
+
+  /* ============ NOTIFICATIONS ============ */
+  .c4-toast {
+    position: fixed;
+    bottom: 28px; right: 28px;
+    padding: 14px 18px;
+    background: #ffffff;
+    border: 1px solid var(--c4-line);
+    border-left: 3px solid var(--c4-success);
+    border-radius: 10px;
+    color: var(--c4-text);
+    font-size: 13px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 16px 40px -12px rgba(20, 16, 10, 0.25);
+    transform: translateY(20px); opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    z-index: 999;
+    max-width: 380px;
+  }
+  .c4-toast.show { transform: translateY(0); opacity: 1; }
+  .c4-toast .toast-icon {
+    width: 26px; height: 26px;
+    background: var(--c4-success-soft);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    color: var(--c4-success);
+    flex-shrink: 0;
+  }
+  .c4-toast b { font-weight: 500; }
+  .c4-toast small { color: var(--c4-text-3); display: block; font-size: 11px; margin-top: 2px; }
+
+  /* Footer */
+  .c4-footer {
+    margin-top: 22px;
+    padding: 16px 24px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--c4-text-3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .c4-footer b { color: var(--c4-text-2); }
+
+  /* Action bar (prev/next) */
+  .c4-action-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--c4-line);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .c4-action-bar .step-hint {
+    font-family: var(--mono); font-size: 11px; color: var(--c4-text-3);
+    letter-spacing: 0.06em;
+  }
+  .c4-action-bar .step-hint b { color: var(--c4-red); font-weight: 500; }
+
+  /* Speaker registration */
+  .c4-form-hero {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .c4-form-hero .small-label {
+    font-size: 10px; letter-spacing: 0.32em; color: var(--c4-red-2); text-transform: uppercase; margin-bottom: 12px; font-weight: 500;
+  }
+  .c4-form-hero h2 {
+    font-family: var(--display); font-size: 30px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; color: var(--c4-text);
+  }
+  .c4-form-hero p { color: var(--c4-text-2); margin-top: 8px; font-size: 13px; }
+
+  /* Inquiry chat-style preview */
+  .c4-thread {
+    background: #ffffff;
+    border: 1px solid var(--c4-line);
+    border-radius: 12px;
+    padding: 18px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .c4-message {
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    max-width: 80%;
+    line-height: 1.55;
+  }
+  .c4-message.them {
+    background: var(--c4-surface-2);
+    border: 1px solid var(--c4-line);
+    color: var(--c4-text);
+    align-self: flex-start;
+  }
+  .c4-message.us {
+    background: var(--c4-red-soft);
+    border: 1px solid rgba(139, 26, 31, 0.20);
+    align-self: flex-end;
+    color: var(--c4-text);
+  }
+  .c4-message .who-line {
+    font-size: 10.5px;
+    color: var(--c4-text-3);
+    margin-bottom: 6px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* Admin queue */
+  .c4-queue-item {
+    background: #ffffff;
+    border: 1px solid var(--c4-line);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 14px;
+    align-items: center;
+  }
+  .c4-queue-item:hover { border-color: rgba(139, 26, 31, 0.40); }
+  .c4-queue-item.active { border-color: var(--c4-red-2); background: var(--c4-red-soft); }
+  .c4-queue-item .q-title { font-size: 13px; color: var(--c4-text); font-weight: 500; margin-bottom: 4px; }
+  .c4-queue-item .q-meta { font-size: 11px; color: var(--c4-text-3); font-family: var(--mono); }
+
+  /* Section divider */
+  .c4-section-label {
+    display: flex; align-items: center; gap: 14px;
+    margin: 22px 0 14px;
+    font-size: 10px; letter-spacing: 0.24em; color: var(--c4-text-3); text-transform: uppercase; font-weight: 500;
+  }
+  .c4-section-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--c4-line);
+  }
+
+  /* Email list (admin compose) */
+  .c4-recipient-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px;
+    background: var(--c4-red-soft);
+    border: 1px solid rgba(139, 26, 31, 0.25);
+    border-radius: 999px;
+    font-size: 11px;
+    color: var(--c4-red);
+    margin: 3px 4px 3px 0;
+    font-weight: 500;
+  }
+  .c4-recipient-chip .x { color: var(--c4-text-3); cursor: pointer; }
+
+</style>
+
+<div class="c4-root">
+  <!-- HEADER -->
+  <div class="c4-header">
+    <div class="c4-logo">
+      <div class="c4-logo-img"><img src="data:image/jpeg;base64,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" alt="C4 Core Code" /></div>
+      <div class="c4-logo-text">
+        <span class="title">Conference Invitation &amp; Speaker Portal</span>
+        <span class="sub">Interactive Prototype · C4 CodeLabs</span>
+      </div>
+    </div>
+    <div class="c4-pill"><span class="dot"></span>Live Preview</div>
+  </div>
+
+  <!-- TABS -->
+  <div class="c4-tabs">
+    <button class="c4-tab active" data-scene="attendee"><span class="num">01</span> Attendee Journey</button>
+    <button class="c4-tab" data-scene="speaker"><span class="num">02</span> Speaker Journey</button>
+    <button class="c4-tab" data-scene="admin"><span class="num">03</span> Admin Console</button>
+  </div>
+
+  <!-- ==================== SCENE 1: ATTENDEE ==================== -->
+  <div class="c4-scene active" id="scene-attendee">
+    <div class="c4-stage">
+      <div class="c4-stage-head">
+        <div>
+          <div class="label">Scenario · Attendee Journey</div>
+          <div class="stepname" id="att-stepname">Step 1 — Admin composes the invitation</div>
+        </div>
+        <div class="c4-pill" style="background: var(--c4-info-soft); border-color: rgba(58, 107, 160, 0.25); color: var(--c4-info);">
+          <span class="dot" style="background: var(--c4-info);"></span>Demo data
+        </div>
+      </div>
+      <div class="c4-stepper" id="att-stepper">
+        <button class="c4-step active" data-att="1"><span class="step-num">1</span>Compose</button>
+        <button class="c4-step" data-att="2"><span class="step-num">2</span>Send</button>
+        <button class="c4-step" data-att="3"><span class="step-num">3</span>Inbox</button>
+        <button class="c4-step" data-att="4"><span class="step-num">4</span>Decision</button>
+        <button class="c4-step" data-att="5"><span class="step-num">5</span>Confirm</button>
+        <button class="c4-step" data-att="6"><span class="step-num">6</span>Done</button>
+      </div>
+
+      <div class="c4-stage-body" id="att-body">
+        <!-- Step 1: Compose -->
+        <div class="att-pane" data-pane="1">
+          <div class="c4-grid-2">
+            <div>
+              <div class="c4-card">
+                <div class="c4-card-title">Invitation builder</div>
+                <div class="c4-card-sub">Pick a branded template, attach event details, and import your invitee list.</div>
+
+                <div class="c4-field">
+                  <label>Template</label>
+                  <select class="c4-select">
+                    <option>Executive Forum — Premium</option>
+                    <option>Tech Summit — Standard</option>
+                    <option>Royal Reception — Ceremonial</option>
+                  </select>
+                </div>
+                <div class="c4-field">
+                  <label>Event title</label>
+                  <input class="c4-input" value="Riyadh Innovation Summit 2026" />
+                </div>
+                <div class="c4-grid-2" style="gap:12px;">
+                  <div class="c4-field">
+                    <label>Date</label>
+                    <input class="c4-input" value="18 — 20 March 2026" />
+                  </div>
+                  <div class="c4-field">
+                    <label>Venue</label>
+                    <input class="c4-input" value="King Abdulaziz Conference Center" />
+                  </div>
+                </div>
+                <div class="c4-field">
+                  <label>Subject line</label>
+                  <input class="c4-input" value="You're invited — Riyadh Innovation Summit 2026" />
+                </div>
+
+                <div class="c4-field" style="margin-bottom:8px;">
+                  <label>Recipient list (CSV imported · 482 contacts)</label>
+                </div>
+                <div style="display:flex; flex-wrap:wrap; margin-bottom:10px;">
+                  <span class="c4-recipient-chip">Khalid Al-Otaibi <span class="x">×</span></span>
+                  <span class="c4-recipient-chip">Maya Haddad <span class="x">×</span></span>
+                  <span class="c4-recipient-chip">Yusuf Ibrahim <span class="x">×</span></span>
+                  <span class="c4-recipient-chip">Lara Saleh <span class="x">×</span></span>
+                  <span class="c4-recipient-chip">+ 478 more</span>
+                </div>
+
+                <button class="c4-btn" onclick="goAtt(2)">Continue to send →</button>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color: var(--c4-text-3); margin-bottom:10px; font-weight: 500;">Live preview</div>
+              <div class="c4-email-window">
+                <div class="c4-email-toolbar">
+                  <div class="traffic"><span></span><span></span><span></span></div>
+                  <div class="url">mail.client.app / inbox / preview</div>
+                </div>
+                <div class="c4-email-body" style="padding: 22px;">
+                  <div class="c4-email-hero" style="padding: 26px 22px;">
+                    <div class="event-label">Official Invitation</div>
+                    <h1 style="font-size:22px;">Riyadh Innovation Summit 2026</h1>
+                    <div class="when"><span>18–20 MAR 2026</span><span>RIYADH</span></div>
+                  </div>
+                  <div class="c4-email-greeting">Dear Khalid Al-Otaibi,</div>
+                  <p>We are honored to invite you to attend the Riyadh Innovation Summit 2026 — three days of strategic dialogue at King Abdulaziz Conference Center.</p>
+                  <p style="text-align:center; margin-top: 18px;"><span class="c4-email-cta">Confirm your attendance</span></p>
+                  <div class="c4-email-footer-mini">This invitation is personal to khalid.alotaibi@example.com</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Send -->
+        <div class="att-pane" data-pane="2" style="display:none;">
+          <div class="c4-card" style="text-align:center; padding: 50px 32px;">
+            <div style="font-size: 11px; color: var(--c4-text-3); letter-spacing: 0.20em; text-transform: uppercase; margin-bottom: 16px; font-weight: 500;">Sending 482 personalized invitations</div>
+            <div class="c4-card-title" style="font-size: 26px; margin-bottom: 12px;">Each link carries the recipient's identity</div>
+            <p style="color: var(--c4-text-2); max-width: 540px; margin: 0 auto 28px; font-size: 13.5px;">When the attendee clicks the button in their inbox, the landing page already knows who they are — no logins, no re-entry of their email.</p>
+
+            <div class="c4-grid-3" style="max-width: 720px; margin: 0 auto 28px;">
+              <div class="c4-metric"><div class="label">Queued</div><div class="value" id="queued-num">482</div></div>
+              <div class="c4-metric"><div class="label">Delivered</div><div class="value" id="delivered-num">0</div></div>
+              <div class="c4-metric"><div class="label">Bounced</div><div class="value" id="bounced-num">0</div></div>
+            </div>
+
+            <button class="c4-btn" onclick="simulateSend()">Send batch now</button>
+            <div class="c4-action-bar" style="max-width:540px; margin:32px auto 0;">
+              <button class="c4-btn ghost" onclick="goAtt(1)">← Back</button>
+              <button class="c4-btn ghost" onclick="goAtt(3)">Skip to inbox view →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Inbox preview -->
+        <div class="att-pane" data-pane="3" style="display:none;">
+          <div style="max-width: 720px; margin: 0 auto;">
+            <div style="text-align:center; margin-bottom:18px;">
+              <div style="font-size: 10px; letter-spacing: 0.28em; color: var(--c4-red-2); text-transform: uppercase; margin-bottom:8px; font-weight: 500;">Attendee point of view</div>
+              <div style="font-family: var(--display); font-size: 22px; font-weight: 500; color: var(--c4-text);">The invitation arrives in Khalid's inbox</div>
+            </div>
+
+            <div class="c4-email-window">
+              <div class="c4-email-toolbar">
+                <div class="traffic"><span></span><span></span><span></span></div>
+                <div class="url">mail.client.app / inbox</div>
+              </div>
+              <div class="c4-email-meta">
+                <div class="from-line"><b>C4 Events</b> &lt;invitations@summit2026.sa&gt;</div>
+                <div class="from-line">to khalid.alotaibi@example.com</div>
+                <div class="subj">You're invited — Riyadh Innovation Summit 2026</div>
+              </div>
+              <div class="c4-email-body">
+                <div class="c4-email-hero">
+                  <div class="event-label">Official Invitation</div>
+                  <h1>Riyadh Innovation Summit 2026</h1>
+                  <div class="when"><span>18–20 MAR 2026</span><span>·</span><span>RIYADH</span></div>
+                </div>
+                <div class="c4-email-greeting">Dear Khalid Al-Otaibi,</div>
+                <p>We are honored to invite you to attend the Riyadh Innovation Summit 2026 — three days of strategic dialogue, hosted at King Abdulaziz Conference Center alongside leaders from across the Kingdom.</p>
+                <p>Your seat is reserved. Please confirm your attendance using the secure link below.</p>
+                <p style="text-align:center; margin-top: 20px;">
+                  <span class="c4-email-cta" onclick="goAtt(4)">Confirm your attendance →</span>
+                </p>
+                <div class="c4-email-footer-mini">This invitation link is personal to you. Forwarding it will not transfer the seat.</div>
+              </div>
+            </div>
+
+            <div class="c4-action-bar">
+              <button class="c4-btn ghost" onclick="goAtt(2)">← Back</button>
+              <div class="step-hint">Click <b>Confirm your attendance</b> to continue</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Landing decision -->
+        <div class="att-pane" data-pane="4" style="display:none;">
+          <div style="max-width: 760px; margin: 0 auto;">
+            <div class="c4-landing">
+              <div class="badge">Personal invitation</div>
+              <h2>Are you joining us in Riyadh?</h2>
+              <div class="hi">Hello <b>Khalid Al-Otaibi</b> — we've pre-loaded your details. One click below.</div>
+
+              <div class="choice-row">
+                <button class="choice-btn choice-confirm" onclick="goAtt(5)">Yes, confirm my attendance</button>
+                <button class="choice-btn choice-decline" onclick="declineFlow()">I won't be able to attend</button>
+              </div>
+
+              <div class="event-meta">
+                <span><b>EVENT</b> &nbsp;Riyadh Innovation Summit</span>
+                <span><b>DATES</b> &nbsp;18–20 March 2026</span>
+                <span><b>VENUE</b> &nbsp;KACC, Riyadh</span>
+              </div>
+            </div>
+            <div class="c4-action-bar">
+              <button class="c4-btn ghost" onclick="goAtt(3)">← Back to inbox</button>
+              <div class="step-hint">Click is logged in real time on the admin dashboard</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: Confirm form -->
+        <div class="att-pane" data-pane="5" style="display:none;">
+          <div style="max-width: 720px; margin: 0 auto;">
+            <div class="c4-form-hero">
+              <div class="small-label">Almost done</div>
+              <h2>Complete your profile</h2>
+              <p>Your name and email came from the invitation. Just confirm a few more details.</p>
+            </div>
+
+            <div class="c4-card">
+              <div class="c4-grid-2" style="gap: 16px;">
+                <div class="c4-field">
+                  <label>Full name</label>
+                  <input class="c4-input readonly" value="Khalid Al-Otaibi" readonly />
+                  <div class="lock-hint">⤷ pre-filled from invitation</div>
+                </div>
+                <div class="c4-field">
+                  <label>Email</label>
+                  <input class="c4-input readonly" value="khalid.alotaibi@example.com" readonly />
+                  <div class="lock-hint">⤷ pre-filled from invitation</div>
+                </div>
+                <div class="c4-field">
+                  <label>Mobile number</label>
+                  <input class="c4-input" placeholder="+966 ..." />
+                </div>
+                <div class="c4-field">
+                  <label>Organization</label>
+                  <input class="c4-input" placeholder="Your company" />
+                </div>
+                <div class="c4-field">
+                  <label>Job title</label>
+                  <input class="c4-input" placeholder="e.g. Director of Strategy" />
+                </div>
+                <div class="c4-field">
+                  <label>Dietary preference</label>
+                  <select class="c4-select">
+                    <option>No preference</option><option>Vegetarian</option><option>Vegan</option><option>Gluten-free</option>
+                  </select>
+                </div>
+              </div>
+              <div class="c4-field">
+                <label>Special notes (optional)</label>
+                <textarea class="c4-textarea" placeholder="Accessibility needs, plus-one details, etc."></textarea>
+              </div>
+
+              <div style="display:flex; gap:10px; margin-top: 12px;">
+                <button class="c4-btn success" onclick="goAtt(6)">Submit confirmation ✓</button>
+                <button class="c4-btn ghost" onclick="goAtt(4)">← Back</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 6: Thank you -->
+        <div class="att-pane" data-pane="6" style="display:none;">
+          <div style="max-width: 620px; margin: 0 auto;">
+            <div class="c4-thanks" id="thanks-content">
+              <div class="icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+              <h2 id="thanks-title">You're confirmed</h2>
+              <p id="thanks-text">A calendar invite and final details will reach you 72 hours before the event. We can't wait to host you in Riyadh.</p>
+              <div class="reference">REF · <b id="thanks-ref">RIS-2026-K-0481</b></div>
+            </div>
+            <div class="c4-action-bar">
+              <button class="c4-btn ghost" onclick="goAtt(1)">↺ Restart attendee flow</button>
+              <button class="c4-btn" onclick="switchScene('admin'); setTimeout(()=>goAdm(1), 100);">See it on the admin dashboard →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SCENE 2: SPEAKER ==================== -->
+  <div class="c4-scene" id="scene-speaker">
+    <div class="c4-stage">
+      <div class="c4-stage-head">
+        <div>
+          <div class="label">Scenario · Speaker Journey</div>
+          <div class="stepname" id="spk-stepname">Step 1 — Speaker registers on the dedicated page</div>
+        </div>
+        <div class="c4-pill" style="background: var(--c4-info-soft); border-color: rgba(58, 107, 160, 0.25); color: var(--c4-info);">
+          <span class="dot" style="background: var(--c4-info);"></span>Demo data
+        </div>
+      </div>
+      <div class="c4-stepper" id="spk-stepper">
+        <button class="c4-step active" data-spk="1"><span class="step-num">1</span>Register</button>
+        <button class="c4-step" data-spk="2"><span class="step-num">2</span>Confirm Email</button>
+        <button class="c4-step" data-spk="3"><span class="step-num">3</span>Approval Email</button>
+        <button class="c4-step" data-spk="4"><span class="step-num">4</span>Portal</button>
+        <button class="c4-step" data-spk="5"><span class="step-num">5</span>Ask a Question</button>
+        <button class="c4-step" data-spk="6"><span class="step-num">6</span>Receive Reply</button>
+      </div>
+
+      <div class="c4-stage-body" id="spk-body">
+        <!-- Step 1: Speaker registration -->
+        <div class="spk-pane" data-pane="1">
+          <div style="max-width: 760px; margin: 0 auto;">
+            <div class="c4-form-hero">
+              <div class="small-label">Speaker Application</div>
+              <h2>Apply to speak at the Summit</h2>
+              <p>Submit your profile. Our content team reviews each application within <b style="color: var(--c4-red);">48 hours</b> before granting portal access.</p>
+            </div>
+
+            <div class="c4-card">
+              <div class="c4-grid-2" style="gap:16px;">
+                <div class="c4-field"><label>Full name</label><input class="c4-input" value="Dr. Reem Al-Harbi" /></div>
+                <div class="c4-field"><label>Email</label><input class="c4-input" value="reem.alharbi@example.com" /></div>
+                <div class="c4-field"><label>Organization</label><input class="c4-input" value="KAUST" /></div>
+                <div class="c4-field"><label>Role / Title</label><input class="c4-input" value="Research Director — AI Lab" /></div>
+                <div class="c4-field">
+                  <label>Track</label>
+                  <select class="c4-select"><option>Artificial Intelligence</option><option>Cybersecurity</option><option>Healthcare Innovation</option><option>Fintech</option></select>
+                </div>
+                <div class="c4-field">
+                  <label>Session type</label>
+                  <select class="c4-select"><option>Keynote (30 min)</option><option>Panel (45 min)</option><option>Workshop (60 min)</option></select>
+                </div>
+              </div>
+              <div class="c4-field"><label>Proposed talk title</label><input class="c4-input" value="Arabic LLMs and the Sovereign AI Stack" /></div>
+              <div class="c4-field"><label>Abstract</label><textarea class="c4-textarea">A practical look at building region-specific language models — data governance, evaluation, and infrastructure choices for Saudi enterprises.</textarea></div>
+
+              <button class="c4-btn" onclick="goSpk(2)">Submit application →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Confirmation email -->
+        <div class="spk-pane" data-pane="2" style="display:none;">
+          <div style="max-width: 680px; margin: 0 auto;">
+            <div style="text-align:center; margin-bottom: 16px;">
+              <div style="font-size:10px; letter-spacing: 0.28em; color: var(--c4-red-2); text-transform: uppercase; font-weight: 500;">Auto-sent by the system</div>
+              <div style="font-family: var(--display); font-size: 22px; font-weight: 500; margin-top:6px; color: var(--c4-text);">Application received — confirmation in inbox</div>
+            </div>
+
+            <div class="c4-email-window">
+              <div class="c4-email-toolbar">
+                <div class="traffic"><span></span><span></span><span></span></div>
+                <div class="url">mail.client.app / inbox</div>
+              </div>
+              <div class="c4-email-meta">
+                <div class="from-line"><b>Speaker Office</b> &lt;speakers@summit2026.sa&gt;</div>
+                <div class="from-line">to reem.alharbi@example.com</div>
+                <div class="subj">We received your speaker application</div>
+              </div>
+              <div class="c4-email-body">
+                <div class="c4-email-greeting">Dear Dr. Reem Al-Harbi,</div>
+                <p>Thank you for applying to speak at the Riyadh Innovation Summit 2026. Your submission has been received and is now under review by our content committee.</p>
+                <p>You will receive a decision within <b style="color: var(--c4-red);">48 hours</b>. If approved, the same email will contain your secure link to the Speaker Portal.</p>
+                <div style="background: var(--c4-red-soft); padding:14px 18px; border-radius:8px; font-size:12px; color: var(--c4-red); font-family: var(--mono); margin-top: 14px; border: 1px solid rgba(139, 26, 31, 0.20);">
+                  REFERENCE · RIS-2026-SPK-0042
+                </div>
+                <div class="c4-email-footer-mini">Reply directly to this email for any urgent matter.</div>
+              </div>
+            </div>
+
+            <div class="c4-action-bar">
+              <button class="c4-btn ghost" onclick="goSpk(1)">← Back</button>
+              <button class="c4-btn" onclick="goSpk(3)">Fast-forward 48 hours · Approval →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Approval email -->
+        <div class="spk-pane" data-pane="3" style="display:none;">
+          <div style="max-width: 680px; margin: 0 auto;">
+            <div style="text-align:center; margin-bottom: 16px;">
+              <div style="font-size:10px; letter-spacing: 0.28em; color: var(--c4-success); text-transform: uppercase; font-weight: 500;">Approved within 48h SLA</div>
+              <div style="font-family: var(--display); font-size: 22px; font-weight: 500; margin-top:6px; color: var(--c4-text);">Portal access granted</div>
+            </div>
+
+            <div class="c4-email-window">
+              <div class="c4-email-toolbar">
+                <div class="traffic"><span></span><span></span><span></span></div>
+                <div class="url">mail.client.app / inbox</div>
+              </div>
+              <div class="c4-email-meta">
+                <div class="from-line"><b>Speaker Office</b> &lt;speakers@summit2026.sa&gt;</div>
+                <div class="from-line">to reem.alharbi@example.com</div>
+                <div class="subj">Welcome, Dr. Reem — your Speaker Portal is ready</div>
+              </div>
+              <div class="c4-email-body">
+                <div class="c4-email-hero" style="background: linear-gradient(135deg, #0e2c1e 0%, #1d4d36 100%);">
+                  <div class="event-label" style="color:#a4dfc1;">Approval Confirmed</div>
+                  <h1 style="font-size:24px;">You're now an official speaker.</h1>
+                </div>
+                <div class="c4-email-greeting">Dear Dr. Reem,</div>
+                <p>We're delighted to confirm that your talk, <b>"Arabic LLMs and the Sovereign AI Stack"</b>, has been approved for the AI track.</p>
+                <p>Your dedicated portal is now active. There you'll find your session brief, brand assets, FAQs, and a direct line to our operations team for any question.</p>
+                <p style="text-align:center; margin-top: 18px;">
+                  <span class="c4-email-cta" onclick="goSpk(4)">Open my Speaker Portal →</span>
+                </p>
+                <div class="c4-email-footer-mini">Any question you submit from the portal is answered within <b>48 hours</b>.</div>
+              </div>
+            </div>
+
+            <div class="c4-action-bar">
+              <button class="c4-btn ghost" onclick="goSpk(2)">← Back</button>
+              <div class="step-hint">Click <b>Open my Speaker Portal</b> to enter</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Portal -->
+        <div class="spk-pane" data-pane="4" style="display:none;">
+          <div class="c4-portal-shell">
+            <div class="c4-portal-side">
+              <div class="logo-mini"><span class="mark"><img src="data:image/jpeg;base64,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" alt="C4"/></span> Speaker Portal</div>
+              <div class="c4-nav-item active">
+                <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 3l9 9"/><path d="M5 10v10h14V10"/></svg>
+                Overview
+              </div>
+              <div class="c4-nav-item">
+                <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                My Session
+              </div>
+              <div class="c4-nav-item">
+                <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Brand Assets
+              </div>
+              <div class="c4-nav-item">
+                <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                FAQ
+              </div>
+              <div class="c4-nav-item">
+                <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Ask a Question
+              </div>
+              <div class="me">
+                <div class="avatar">R</div>
+                <div class="who"><b>Dr. Reem Al-Harbi</b><span>AI Track · Keynote</span></div>
+              </div>
+            </div>
+
+            <div class="c4-portal-main">
+              <div class="greeting">Welcome back, <span class="accent">Dr. Reem.</span></div>
+              <div class="sub-greet">Riyadh Innovation Summit · 18–20 March 2026 · Day 1, 10:30 AM</div>
+
+              <div class="c4-sla-banner">
+                <div class="sla-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div class="sla-text">
+                  <b>48-hour response guarantee</b>
+                  <span>Every question you submit through this portal is answered by our team within 48 hours.</span>
+                </div>
+              </div>
+
+              <div class="c4-section-label">Quick access</div>
+              <div class="c4-grid-3">
+                <div class="c4-tile">
+                  <div class="tile-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  </div>
+                  <h4>My session brief</h4>
+                  <p>Stage A · 10:30 AM · 30 minutes</p>
+                </div>
+                <div class="c4-tile">
+                  <div class="tile-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  </div>
+                  <h4>Brand kit</h4>
+                  <p>Logos, slide template, signature pack</p>
+                </div>
+                <div class="c4-tile" onclick="goSpk(5)">
+                  <div class="tile-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  </div>
+                  <h4>Ask the team</h4>
+                  <p>Reply within 48h · guaranteed</p>
+                </div>
+              </div>
+
+              <div class="c4-section-label">Frequently asked</div>
+              <div>
+                <div class="c4-faq-item" onclick="this.classList.toggle('open')">
+                  <div class="c4-faq-q">What time should I arrive at the venue? <span class="arrow">▾</span></div>
+                  <div class="c4-faq-a"><div>Please arrive at least 90 minutes before your session slot for the technical run-through, microphone check, and a brief greenroom welcome from the program director.</div></div>
+                </div>
+                <div class="c4-faq-item" onclick="this.classList.toggle('open')">
+                  <div class="c4-faq-q">In which format do I submit my slides? <span class="arrow">▾</span></div>
+                  <div class="c4-faq-a"><div>Slides are accepted as PDF or 16:9 PowerPoint. The system reserves a slot for your upload up to 48 hours before your session. The official template is in the Brand Assets section.</div></div>
+                </div>
+                <div class="c4-faq-item" onclick="this.classList.toggle('open')">
+                  <div class="c4-faq-q">Is transportation arranged from the airport? <span class="arrow">▾</span></div>
+                  <div class="c4-faq-a"><div>Yes — a private transfer is reserved for each approved speaker. Share your flight information through the "My Session" tab and a confirmation will be sent 72 hours prior to arrival.</div></div>
+                </div>
+                <div class="c4-faq-item" onclick="this.classList.toggle('open')">
+                  <div class="c4-faq-q">Can I bring a guest to the gala dinner? <span class="arrow">▾</span></div>
+                  <div class="c4-faq-a"><div>Yes, each speaker is welcome to bring one guest to the gala. Add your guest's name from the "My Session" tab and a personalized badge will be prepared at on-site registration.</div></div>
+                </div>
+              </div>
+
+              <div class="c4-action-bar">
+                <button class="c4-btn ghost" onclick="goSpk(3)">← Back</button>
+                <button class="c4-btn" onclick="goSpk(5)">Ask a question →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: Ask a question -->
+        <div class="spk-pane" data-pane="5" style="display:none;">
+          <div style="max-width: 720px; margin: 0 auto;">
+            <div class="c4-form-hero">
+              <div class="small-label">Direct line to the team</div>
+              <h2>Ask a question</h2>
+              <p>Submit your inquiry. Our team replies within <b style="color: var(--c4-red);">48 hours</b>.</p>
+            </div>
+
+            <div class="c4-card">
+              <div class="c4-grid-2" style="gap:16px;">
+                <div class="c4-field">
+                  <label>Category</label>
+                  <select class="c4-select"><option>Logistics</option><option>Travel &amp; accommodation</option><option>Technical &amp; AV</option><option>Content &amp; agenda</option><option>Other</option></select>
+                </div>
+                <div class="c4-field">
+                  <label>Priority</label>
+                  <select class="c4-select"><option>Normal</option><option>High</option></select>
+                </div>
+              </div>
+              <div class="c4-field"><label>Subject</label><input class="c4-input" value="Will there be a confidence monitor on stage?" /></div>
+              <div class="c4-field">
+                <label>Your question</label>
+                <textarea class="c4-textarea">Hello team — I rely on a confidence monitor while presenting. Could you confirm if Stage A is equipped with one, and whether I can preview my notes from the lectern?</textarea>
+              </div>
+
+              <button class="c4-btn" onclick="submitInquiry()">Submit question</button>
+            </div>
+
+            <div class="c4-action-bar">
+              <button class="c4-btn ghost" onclick="goSpk(4)">← Back to portal</button>
+              <div class="step-hint">SLA · <b>within 48 hours</b></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 6: Reply received -->
+        <div class="spk-pane" data-pane="6" style="display:none;">
+          <div style="max-width: 720px; margin: 0 auto;">
+            <div style="text-align:center; margin-bottom:18px;">
+              <div style="font-size:10px; letter-spacing: 0.28em; color: var(--c4-success); text-transform: uppercase; font-weight: 500;">Answer received within 48h</div>
+              <div style="font-family: var(--display); font-size: 22px; font-weight: 500; margin-top:6px; color: var(--c4-text);">The team has replied — full history preserved</div>
+            </div>
+
+            <div class="c4-thread">
+              <div style="font-size:11px; color: var(--c4-text-3); letter-spacing:0.08em; padding-bottom:6px; border-bottom: 1px solid var(--c4-line); margin-bottom: 4px; text-transform: uppercase; font-weight: 500;">
+                INQUIRY #INQ-2026-008 · Technical &amp; AV · <span style="color: var(--c4-success);">REPLIED</span>
+              </div>
+              <div class="c4-message them">
+                <div class="who-line">You · earlier today</div>
+                <b>Will there be a confidence monitor on stage?</b><br>
+                Hello team — I rely on a confidence monitor while presenting. Could you confirm if Stage A is equipped with one, and whether I can preview my notes from the lectern?
+              </div>
+              <div class="c4-message us">
+                <div class="who-line">Operations Team · within SLA</div>
+                Hi Dr. Reem — yes, Stage A has two confidence monitors (one center-stage, one at the lectern) plus presenter notes mode for both PDF and PowerPoint. Our AV lead will run a 15-minute walk-through with you before the keynote. We'll book that slot once we receive your slide upload. Anything else?
+              </div>
+              <div style="display:flex; gap:10px; margin-top:8px;">
+                <input class="c4-input" placeholder="Reply to the team..." style="flex:1;" />
+                <button class="c4-btn">Send</button>
+              </div>
+            </div>
+
+            <div class="c4-action-bar">
+              <button class="c4-btn ghost" onclick="goSpk(1)">↺ Restart speaker flow</button>
+              <button class="c4-btn" onclick="switchScene('admin'); setTimeout(()=>goAdm(2), 100);">See it in the admin queue →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SCENE 3: ADMIN CONSOLE ==================== -->
+  <div class="c4-scene" id="scene-admin">
+    <div class="c4-stage">
+      <div class="c4-stage-head">
+        <div>
+          <div class="label">One control center · Both audiences</div>
+          <div class="stepname" id="adm-stepname">Engagement Dashboard — Attendees</div>
+        </div>
+        <div class="c4-pill" style="background: var(--c4-info-soft); border-color: rgba(58, 107, 160, 0.25); color: var(--c4-info);">
+          <span class="dot" style="background: var(--c4-info);"></span>Demo data
+        </div>
+      </div>
+      <div class="c4-stepper">
+        <button class="c4-step active" data-adm="1"><span class="step-num">A</span>Attendee Dashboard</button>
+        <button class="c4-step" data-adm="2"><span class="step-num">B</span>Inquiry Queue</button>
+        <button class="c4-step" data-adm="3"><span class="step-num">C</span>Speaker Approvals</button>
+      </div>
+
+      <div class="c4-stage-body">
+        <!-- Admin pane 1: attendee dashboard -->
+        <div class="adm-pane" data-pane="1">
+          <div class="c4-grid-4">
+            <div class="c4-metric">
+              <div class="label">Invitations sent</div>
+              <div class="value">482</div>
+              <div class="delta">All recipients · single campaign</div>
+              <div class="pct"><div class="fill" style="width:100%"></div></div>
+            </div>
+            <div class="c4-metric">
+              <div class="label">Opened</div>
+              <div class="value">419</div>
+              <div class="delta"><span class="up">▲ 86.9%</span> open rate</div>
+              <div class="pct"><div class="fill" style="width:86%"></div></div>
+            </div>
+            <div class="c4-metric">
+              <div class="label">Clicked</div>
+              <div class="value">344</div>
+              <div class="delta"><span class="up">▲ 71.4%</span> CTR</div>
+              <div class="pct"><div class="fill" style="width:71%"></div></div>
+            </div>
+            <div class="c4-metric">
+              <div class="label">Confirmed</div>
+              <div class="value" style="color: var(--c4-success);">298</div>
+              <div class="delta"><span class="up">▲ 61.8%</span> conversion</div>
+              <div class="pct"><div class="fill" style="width:62%; background: var(--c4-success);"></div></div>
+            </div>
+          </div>
+
+          <div class="c4-section-label">Invitation funnel</div>
+          <div class="c4-funnel">
+            <div class="c4-funnel-bar">
+              <div class="name">Delivered</div>
+              <div class="track"><div class="fill" style="width:100%;"></div></div>
+              <div class="count">482<span class="small">100%</span></div>
+            </div>
+            <div class="c4-funnel-bar">
+              <div class="name">Opened</div>
+              <div class="track"><div class="fill" style="width:86.9%;"></div></div>
+              <div class="count">419<span class="small">86.9%</span></div>
+            </div>
+            <div class="c4-funnel-bar">
+              <div class="name">Clicked link</div>
+              <div class="track"><div class="fill" style="width:71.4%;"></div></div>
+              <div class="count">344<span class="small">71.4%</span></div>
+            </div>
+            <div class="c4-funnel-bar">
+              <div class="name">Confirmed</div>
+              <div class="track"><div class="fill" style="width:61.8%; background: linear-gradient(90deg, var(--c4-success), #4ba07a);"></div></div>
+              <div class="count">298<span class="small">61.8%</span></div>
+            </div>
+            <div class="c4-funnel-bar">
+              <div class="name">Declined</div>
+              <div class="track"><div class="fill" style="width:9.5%; background: linear-gradient(90deg, #6c1418, #a8232a);"></div></div>
+              <div class="count">46<span class="small">9.5%</span></div>
+            </div>
+          </div>
+
+          <div class="c4-section-label">Recipient activity</div>
+          <div class="c4-card" style="padding: 0; overflow: hidden;">
+            <table class="c4-table">
+              <thead>
+                <tr><th>Name</th><th>Email</th><th>Organization</th><th>Status</th><th>Last activity</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="name-cell">Khalid Al-Otaibi</td><td>khalid.alotaibi@…</td><td>Aramco Digital</td><td><span class="c4-status confirmed"><span class="dot"></span>Confirmed</span></td><td>just now</td></tr>
+                <tr><td class="name-cell">Maya Haddad</td><td>maya.haddad@…</td><td>STC Group</td><td><span class="c4-status confirmed"><span class="dot"></span>Confirmed</span></td><td>14 min ago</td></tr>
+                <tr><td class="name-cell">Yusuf Ibrahim</td><td>yusuf.ibrahim@…</td><td>NEOM</td><td><span class="c4-status clicked"><span class="dot"></span>Clicked</span></td><td>32 min ago</td></tr>
+                <tr><td class="name-cell">Lara Saleh</td><td>lara.saleh@…</td><td>SDAIA</td><td><span class="c4-status opened"><span class="dot"></span>Opened</span></td><td>1 hr ago</td></tr>
+                <tr><td class="name-cell">Tariq Al-Shehri</td><td>tariq.shehri@…</td><td>PIF</td><td><span class="c4-status declined"><span class="dot"></span>Declined</span></td><td>2 hr ago</td></tr>
+                <tr><td class="name-cell">Noura Bin Saleh</td><td>noura.salem@…</td><td>Tonomus</td><td><span class="c4-status pending"><span class="dot"></span>Pending</span></td><td>—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Admin pane 2: inquiry queue -->
+        <div class="adm-pane" data-pane="2" style="display:none;">
+          <div class="c4-grid-4">
+            <div class="c4-metric"><div class="label">Open inquiries</div><div class="value">7</div></div>
+            <div class="c4-metric"><div class="label">In progress</div><div class="value">3</div></div>
+            <div class="c4-metric"><div class="label">Replied today</div><div class="value">12</div></div>
+            <div class="c4-metric"><div class="label">SLA target</div><div class="value">48h</div></div>
+          </div>
+
+          <div class="c4-grid-2" style="margin-top: 20px;">
+            <div>
+              <div class="c4-section-label" style="margin-top: 0;">Queue</div>
+              <div class="c4-queue-item active">
+                <div>
+                  <div class="q-title">Will there be a confidence monitor on stage?</div>
+                  <div class="q-meta">INQ-008 · Dr. Reem Al-Harbi · Technical &amp; AV · 3h elapsed / 48h SLA</div>
+                </div>
+                <span class="c4-status open-q"><span class="dot"></span>Open</span>
+              </div>
+              <div class="c4-queue-item">
+                <div>
+                  <div class="q-title">Can my co-presenter be added to the badge list?</div>
+                  <div class="q-meta">INQ-007 · Faisal Al-Qahtani · Logistics · 8h elapsed</div>
+                </div>
+                <span class="c4-status open-q"><span class="dot"></span>Open</span>
+              </div>
+              <div class="c4-queue-item">
+                <div>
+                  <div class="q-title">Travel arrangements from Dubai — confirmation?</div>
+                  <div class="q-meta">INQ-006 · Layla Al-Sayed · Travel · replied in 6h</div>
+                </div>
+                <span class="c4-status replied"><span class="dot"></span>Replied</span>
+              </div>
+              <div class="c4-queue-item">
+                <div>
+                  <div class="q-title">Slide template — Arabic version?</div>
+                  <div class="q-meta">INQ-005 · Omar Naseer · Content · replied in 11h</div>
+                </div>
+                <span class="c4-status replied"><span class="dot"></span>Replied</span>
+              </div>
+              <div class="c4-queue-item">
+                <div>
+                  <div class="q-title">Dietary requirements during gala dinner</div>
+                  <div class="q-meta">INQ-004 · Hanan Al-Mutairi · Logistics · replied in 4h</div>
+                </div>
+                <span class="c4-status replied"><span class="dot"></span>Replied</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="c4-section-label" style="margin-top: 0;">Selected · INQ-008</div>
+              <div class="c4-card">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--c4-line);">
+                  <div style="width:38px; height:38px; border-radius:50%; background: linear-gradient(135deg, var(--c4-red), #4d0e10); display:grid; place-items:center; font-family: var(--display); font-weight:600; color:#fff;">R</div>
+                  <div>
+                    <div style="font-weight:500;">Dr. Reem Al-Harbi</div>
+                    <div style="font-size:11px; color: var(--c4-text-3); font-family: var(--mono);">AI Track · Keynote · reem.alharbi@…</div>
+                  </div>
+                </div>
+                <div style="font-size:12px; color: var(--c4-text-3); margin-bottom: 6px;">Category: <span style="color: var(--c4-text);">Technical &amp; AV</span></div>
+                <div style="font-size:12px; color: var(--c4-text-3); margin-bottom: 14px;">Assigned to: <span style="color: var(--c4-text);">Ops · AV Lead</span></div>
+
+                <div class="c4-thread" style="background: var(--c4-surface-2); padding: 14px;">
+                  <div class="c4-message them" style="max-width: 100%; background: #fff;">
+                    <div class="who-line">Reem · 3 hr ago</div>
+                    Hello team — I rely on a confidence monitor while presenting. Could you confirm if Stage A is equipped with one?
+                  </div>
+                </div>
+
+                <div style="margin-top: 14px;">
+                  <label style="display:block; font-size:11px; letter-spacing:0.12em; color: var(--c4-text-3); text-transform: uppercase; margin-bottom:6px; font-weight: 500;">Your reply</label>
+                  <textarea class="c4-textarea">Hi Dr. Reem — yes, Stage A has two confidence monitors (center-stage and lectern) plus presenter notes for PDF and PowerPoint. Our AV lead will run a 15-minute walk-through with you before the keynote.</textarea>
+                </div>
+                <div style="display:flex; gap:10px; margin-top: 10px; flex-wrap: wrap;">
+                  <button class="c4-btn">Send reply</button>
+                  <button class="c4-btn ghost">Save draft</button>
+                  <button class="c4-btn ghost">Reassign</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin pane 3: speaker approvals -->
+        <div class="adm-pane" data-pane="3" style="display:none;">
+          <div class="c4-grid-4">
+            <div class="c4-metric"><div class="label">Applications</div><div class="value">73</div></div>
+            <div class="c4-metric"><div class="label">Approved</div><div class="value" style="color: var(--c4-success);">41</div></div>
+            <div class="c4-metric"><div class="label">Pending review</div><div class="value" style="color: var(--c4-warn);">19</div></div>
+            <div class="c4-metric"><div class="label">Avg. decision</div><div class="value">31h</div></div>
+          </div>
+
+          <div class="c4-section-label">Pending review · 48h SLA</div>
+          <div class="c4-card" style="padding: 0; overflow: hidden;">
+            <table class="c4-table">
+              <thead><tr><th>Speaker</th><th>Track</th><th>Talk</th><th>Submitted</th><th>Action</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td class="name-cell">Dr. Reem Al-Harbi</td>
+                  <td>AI</td>
+                  <td>Arabic LLMs and the Sovereign AI Stack</td>
+                  <td>10 min ago</td>
+                  <td style="display:flex; gap:6px;"><button class="c4-btn success" style="padding:6px 12px; font-size:11.5px;">Approve</button><button class="c4-btn danger-outline" style="padding:6px 12px; font-size:11.5px;">Decline</button></td>
+                </tr>
+                <tr>
+                  <td class="name-cell">Faisal Al-Qahtani</td>
+                  <td>Fintech</td>
+                  <td>Open banking — the next regulatory wave</td>
+                  <td>3 hr ago</td>
+                  <td style="display:flex; gap:6px;"><button class="c4-btn success" style="padding:6px 12px; font-size:11.5px;">Approve</button><button class="c4-btn danger-outline" style="padding:6px 12px; font-size:11.5px;">Decline</button></td>
+                </tr>
+                <tr>
+                  <td class="name-cell">Layla Al-Sayed</td>
+                  <td>Healthcare</td>
+                  <td>Genomic medicine in MENA</td>
+                  <td>26 hr ago</td>
+                  <td style="display:flex; gap:6px;"><button class="c4-btn success" style="padding:6px 12px; font-size:11.5px;">Approve</button><button class="c4-btn danger-outline" style="padding:6px 12px; font-size:11.5px;">Decline</button></td>
+                </tr>
+                <tr>
+                  <td class="name-cell">Omar Naseer</td>
+                  <td>Cybersecurity</td>
+                  <td>Zero-trust beyond the buzzword</td>
+                  <td>40 hr ago</td>
+                  <td style="display:flex; gap:6px;"><button class="c4-btn success" style="padding:6px 12px; font-size:11.5px;">Approve</button><button class="c4-btn danger-outline" style="padding:6px 12px; font-size:11.5px;">Decline</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="c4-footer">
+    Prototype mockup · <b>C4 CodeLabs</b> · Conference Invitation &amp; Speaker Portal
+  </div>
+
+  <!-- Toast -->
+  <div class="c4-toast" id="toast">
+    <div class="toast-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    </div>
+    <div><b id="toast-title">Done</b><small id="toast-sub">...</small></div>
+  </div>
+</div>
+
+<script>
+  // ============ Scene switching ============
+  function switchScene(name) {
+    document.querySelectorAll('.c4-scene').forEach(s => s.classList.remove('active'));
+    document.getElementById('scene-' + name).classList.add('active');
+    document.querySelectorAll('.c4-tab').forEach(t => t.classList.toggle('active', t.dataset.scene === name));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  document.querySelectorAll('.c4-tab').forEach(t => {
+    t.addEventListener('click', () => switchScene(t.dataset.scene));
+  });
+
+  // ============ Attendee stepper ============
+  const attStepNames = {
+    1: 'Step 1 — Admin composes the invitation',
+    2: 'Step 2 — Personalized batch is sent',
+    3: 'Step 3 — Invitation arrives in inbox',
+    4: 'Step 4 — Attendee decides',
+    5: 'Step 5 — Confirm details (pre-filled)',
+    6: 'Step 6 — Confirmation complete'
+  };
+  function goAtt(n) {
+    document.querySelectorAll('#scene-attendee .att-pane').forEach(p => p.style.display = p.dataset.pane == n ? 'block' : 'none');
+    document.querySelectorAll('#att-stepper .c4-step').forEach(s => {
+      const idx = parseInt(s.dataset.att);
+      s.classList.toggle('active', idx === n);
+      s.classList.toggle('done', idx < n);
+    });
+    document.getElementById('att-stepname').textContent = attStepNames[n];
+  }
+  document.querySelectorAll('#att-stepper .c4-step').forEach(s => {
+    s.addEventListener('click', () => goAtt(parseInt(s.dataset.att)));
+  });
+
+  // ============ Speaker stepper ============
+  const spkStepNames = {
+    1: 'Step 1 — Speaker registers on the dedicated page',
+    2: 'Step 2 — Auto confirmation email',
+    3: 'Step 3 — Approval email & portal access (within 48h)',
+    4: 'Step 4 — Inside the Speaker Portal',
+    5: 'Step 5 — Speaker submits a question',
+    6: 'Step 6 — Reply received within 48h'
+  };
+  function goSpk(n) {
+    document.querySelectorAll('#scene-speaker .spk-pane').forEach(p => p.style.display = p.dataset.pane == n ? 'block' : 'none');
+    document.querySelectorAll('#spk-stepper .c4-step').forEach(s => {
+      const idx = parseInt(s.dataset.spk);
+      s.classList.toggle('active', idx === n);
+      s.classList.toggle('done', idx < n);
+    });
+    document.getElementById('spk-stepname').textContent = spkStepNames[n];
+  }
+  document.querySelectorAll('#spk-stepper .c4-step').forEach(s => {
+    s.addEventListener('click', () => goSpk(parseInt(s.dataset.spk)));
+  });
+
+  // ============ Admin stepper ============
+  const admStepNames = {
+    1: 'Engagement Dashboard — Attendees',
+    2: 'Inquiry Queue — 48h SLA tracking',
+    3: 'Speaker Approvals — 48h review window'
+  };
+  function goAdm(n) {
+    document.querySelectorAll('#scene-admin .adm-pane').forEach(p => p.style.display = p.dataset.pane == n ? 'block' : 'none');
+    document.querySelectorAll('#scene-admin .c4-stepper .c4-step').forEach(s => {
+      const idx = parseInt(s.dataset.adm);
+      s.classList.toggle('active', idx === n);
+    });
+    document.getElementById('adm-stepname').textContent = admStepNames[n];
+  }
+  document.querySelectorAll('#scene-admin .c4-stepper .c4-step').forEach(s => {
+    s.addEventListener('click', () => goAdm(parseInt(s.dataset.adm)));
+  });
+
+  // ============ Send simulation ============
+  function simulateSend() {
+    const dEl = document.getElementById('delivered-num');
+    const total = 482;
+    let n = 0;
+    const interval = setInterval(() => {
+      n += Math.ceil(Math.random() * 40);
+      if (n >= total) { n = total; clearInterval(interval); setTimeout(() => goAtt(3), 600); }
+      dEl.textContent = n;
+    }, 80);
+    showToast('Batch sending', '482 personalized invitations dispatched');
+  }
+
+  // ============ Decline ============
+  function declineFlow() {
+    document.getElementById('thanks-content').innerHTML = `
+      <div class="icon muted">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </div>
+      <h2>Thank you for letting us know</h2>
+      <p>We'll keep you on our list for future editions. We hope to host you at the next Riyadh Innovation Summit.</p>
+      <div class="reference">REF · <b>RIS-2026-K-0481-DECL</b></div>
+    `;
+    goAtt(6);
+  }
+
+  // ============ Inquiry ============
+  function submitInquiry() {
+    showToast('Question submitted', 'Reply within 48 hours · guaranteed');
+    setTimeout(() => goSpk(6), 700);
+  }
+
+  // ============ Toast ============
+  function showToast(title, sub) {
+    const t = document.getElementById('toast');
+    document.getElementById('toast-title').textContent = title;
+    document.getElementById('toast-sub').textContent = sub;
+    t.classList.add('show');
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+  }
+</script>
